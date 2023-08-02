@@ -1,0 +1,53 @@
+[
+    {
+        "_id": "QM9XnOXOeBcj3x6ZaCjyi3wA3sp2",
+        "name": "Unai",
+        "surname": "Mendieta",
+        "plan": {
+            "type": "básico",
+            "price": null,
+            "frequency": "monthly",
+            "historic": false,
+            "likeMax": 3
+        },
+        "paymentes": [
+            {
+                "date": "08/07/2023",
+                "plan": "PLAN ESTANDAR",
+                "price": "3.95€",
+                "state": "PAGADO"
+            }
+        ],
+        "liked": []
+    },
+    {
+        "_id": "a8ecadwb-b9257-3wqea-ac04-6cd011e6e5e4",
+        "name": "Unai2",
+        "surname": "Mendieta",
+        "email": "unaimendieta2@gmail.com",
+        "password": "admin",
+        "plan": {
+            "type": "estandar",
+            "price": 3.95,
+            "frequency": "monthly",
+            "historic": true,
+            "likeMax": 10
+        },
+        "liked": []
+    },
+    {
+        "_id": "a8eecadwb-b957-415da-acw4-6cadwdc5e4",
+        "name": "Unai3",
+        "surname": "Mendieta",
+        "email": "unaimendieta3@gmail.com",
+        "password": "admin",
+        "plan": {
+            "type": "deluxe",
+            "price": 8.99,
+            "frequency": "monthly",
+            "historic": true,
+            "likeMax": null
+        },
+        "liked": []
+    }
+]
