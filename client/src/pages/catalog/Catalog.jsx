@@ -5,16 +5,28 @@ import { useParams } from "react-router-dom";
 
 const Catalog = () => {
     const { filter } = useParams();
+    const [productFilter, setProductFilter] = useState({
+        price:"",
+        brand:"",
+        valoration:0,
+        orderBy:""
+    })
     const [productList, setProductList] = useState([])
+    const [productListFiltered, setProductListFiltered] = useState([])
     useEffect(() => {
-        window.scrollTo(0, 0);
-        loadProducts(setProductList, filter);
-    }, [filter])
+        if (productList.length===0) {
+            window.scrollTo(0, 0);
+            loadProducts(setProductList, filter,setProductListFiltered);
+        }else{
+            loadProducts(setProductList, filter,setProductList);
+        }
+    }, [filter,productListFiltered]);
+
     return (
         <>
             <MainContainer>
                 <UpperSection>
-                    <Title>Se han encontrado mas de <Highlight>{productList.length - 10}</Highlight> <br />resultados para tu busqueda</Title>
+                    <Title>Se han encontrado <Highlight>{productListFiltered.length}</Highlight> <br />resultados para tu busqueda</Title>
                     <SearchContainer>
                         <Searcher type="search" placeholder="Frenos, Amortiguadores..." />
                         <SearchButton>BUSCAR</SearchButton>
@@ -52,7 +64,7 @@ const Catalog = () => {
                                 <FilterName>Valoraciones</FilterName>
                                 <FilterOptions>
                                     <OptionsLine>
-                                        <RadioButon type="radio" name="valoration" id="valoration4" />
+                                        <RadioButon type="radio" name="valoration" id="valoration4" checked={productFilter.valoration === 4} onClick={()=>orderResults({...productFilter, valoration:4},setProductFilter,productList,setProductListFiltered)}/>
                                         <CheckBoxLabel htmlFor="valoration4">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="95" height="14" viewBox="0 0 95 14" fill="none">
                                                 <path d="M7.5 11.319L3.97938 13.8123C3.80494 13.9447 3.61463 14.007 3.40847 13.9994C3.20231 13.9923 3.01994 13.9373 2.86135 13.8343C2.70276 13.7314 2.58002 13.5916 2.49311 13.4151C2.40557 13.2386 2.40145 13.0474 2.48074 12.8414L3.83666 8.75954L0.387404 6.48691C0.1971 6.36924 0.0781604 6.21479 0.0305845 6.02356C-0.0169914 5.83234 -0.00906202 5.65582 0.0543725 5.49402C0.117807 5.33221 0.228817 5.18865 0.387404 5.06332C0.54599 4.93858 0.736294 4.87622 0.958314 4.87622H5.21636L6.59606 0.639865C6.67535 0.433932 6.79841 0.275657 6.96525 0.165041C7.13144 0.055014 7.3097 0 7.5 0C7.6903 0 7.86856 0.055014 8.03475 0.165041C8.20159 0.275657 8.32465 0.433932 8.40394 0.639865L9.78364 4.87622H14.0417C14.2637 4.87622 14.454 4.93858 14.6126 5.06332C14.7712 5.18865 14.8822 5.33221 14.9456 5.49402C15.0091 5.65582 15.017 5.83234 14.9694 6.02356C14.9218 6.21479 14.8029 6.36924 14.6126 6.48691L11.1633 8.75954L12.5193 12.8414C12.5985 13.0474 12.5947 13.2386 12.5078 13.4151C12.4203 13.5916 12.2972 13.7314 12.1386 13.8343C11.9801 13.9373 11.7977 13.9923 11.5915 13.9994C11.3854 14.007 11.1951 13.9447 11.0206 13.8123L7.5 11.319Z" fill="#D04545" />
@@ -63,7 +75,7 @@ const Catalog = () => {
                                             </svg> o más</CheckBoxLabel>
                                     </OptionsLine>
                                     <OptionsLine>
-                                        <RadioButon type="radio" name="valoration" id="valoration3" />
+                                        <RadioButon type="radio" name="valoration" id="valoration3"  checked={productFilter.valoration === 3} onClick={()=>orderResults({...productFilter, valoration:3},setProductFilter,productList,setProductListFiltered)}/>
                                         <CheckBoxLabel htmlFor="valoration3">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="95" height="14" viewBox="0 0 95 14" fill="none">
                                                 <path d="M7.5 11.319L3.97938 13.8123C3.80494 13.9447 3.61463 14.007 3.40847 13.9994C3.20231 13.9923 3.01994 13.9373 2.86135 13.8343C2.70276 13.7314 2.58002 13.5916 2.49311 13.4151C2.40557 13.2386 2.40145 13.0474 2.48074 12.8414L3.83666 8.75954L0.387404 6.48691C0.1971 6.36924 0.0781604 6.21479 0.0305845 6.02356C-0.0169914 5.83234 -0.00906202 5.65582 0.0543725 5.49402C0.117807 5.33221 0.228817 5.18865 0.387404 5.06332C0.54599 4.93858 0.736294 4.87622 0.958314 4.87622H5.21636L6.59606 0.639865C6.67535 0.433932 6.79841 0.275657 6.96525 0.165041C7.13144 0.055014 7.3097 0 7.5 0C7.6903 0 7.86856 0.055014 8.03475 0.165041C8.20159 0.275657 8.32465 0.433932 8.40394 0.639865L9.78364 4.87622H14.0417C14.2637 4.87622 14.454 4.93858 14.6126 5.06332C14.7712 5.18865 14.8822 5.33221 14.9456 5.49402C15.0091 5.65582 15.017 5.83234 14.9694 6.02356C14.9218 6.21479 14.8029 6.36924 14.6126 6.48691L11.1633 8.75954L12.5193 12.8414C12.5985 13.0474 12.5947 13.2386 12.5078 13.4151C12.4203 13.5916 12.2972 13.7314 12.1386 13.8343C11.9801 13.9373 11.7977 13.9923 11.5915 13.9994C11.3854 14.007 11.1951 13.9447 11.0206 13.8123L7.5 11.319Z" fill="#D04545" />
@@ -75,7 +87,7 @@ const Catalog = () => {
                                             o mas</CheckBoxLabel>
                                     </OptionsLine>
                                     <OptionsLine>
-                                        <RadioButon type="radio" name="valoration" id="valoration2" />
+                                        <RadioButon type="radio" name="valoration" id="valoration2"  checked={productFilter.valoration === 2} onClick={()=>orderResults({...productFilter, valoration:2},setProductFilter,productList,setProductListFiltered)}/>
                                         <CheckBoxLabel htmlFor="valoration2">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="95" height="14" viewBox="0 0 95 14" fill="none">
                                                 <path d="M7.5 11.319L3.97938 13.8123C3.80494 13.9447 3.61463 14.007 3.40847 13.9994C3.20231 13.9923 3.01994 13.9373 2.86135 13.8343C2.70276 13.7314 2.58002 13.5916 2.49311 13.4151C2.40557 13.2386 2.40145 13.0474 2.48074 12.8414L3.83666 8.75954L0.387404 6.48691C0.1971 6.36924 0.0781604 6.21479 0.0305845 6.02356C-0.0169914 5.83234 -0.00906202 5.65582 0.0543725 5.49402C0.117807 5.33221 0.228817 5.18865 0.387404 5.06332C0.54599 4.93858 0.736294 4.87622 0.958314 4.87622H5.21636L6.59606 0.639865C6.67535 0.433932 6.79841 0.275657 6.96525 0.165041C7.13144 0.055014 7.3097 0 7.5 0C7.6903 0 7.86856 0.055014 8.03475 0.165041C8.20159 0.275657 8.32465 0.433932 8.40394 0.639865L9.78364 4.87622H14.0417C14.2637 4.87622 14.454 4.93858 14.6126 5.06332C14.7712 5.18865 14.8822 5.33221 14.9456 5.49402C15.0091 5.65582 15.017 5.83234 14.9694 6.02356C14.9218 6.21479 14.8029 6.36924 14.6126 6.48691L11.1633 8.75954L12.5193 12.8414C12.5985 13.0474 12.5947 13.2386 12.5078 13.4151C12.4203 13.5916 12.2972 13.7314 12.1386 13.8343C11.9801 13.9373 11.7977 13.9923 11.5915 13.9994C11.3854 14.007 11.1951 13.9447 11.0206 13.8123L7.5 11.319Z" fill="#D04545" />
@@ -87,7 +99,7 @@ const Catalog = () => {
                                             o mas</CheckBoxLabel>
                                     </OptionsLine>
                                     <OptionsLine>
-                                        <RadioButon type="radio" name="valoration" id="valoration1" />
+                                        <RadioButon type="radio" name="valoration" id="valoration1"  checked={productFilter.valoration === 1} onClick={()=>orderResults({...productFilter, valoration:1},setProductFilter,productList,setProductListFiltered)}/>
                                         <CheckBoxLabel htmlFor="valoration1">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="95" height="14" viewBox="0 0 95 14" fill="none">
                                                 <path d="M7.5 11.319L3.97938 13.8123C3.80494 13.9447 3.61463 14.007 3.40847 13.9994C3.20231 13.9923 3.01994 13.9373 2.86135 13.8343C2.70276 13.7314 2.58002 13.5916 2.49311 13.4151C2.40557 13.2386 2.40145 13.0474 2.48074 12.8414L3.83666 8.75954L0.387404 6.48691C0.1971 6.36924 0.0781604 6.21479 0.0305845 6.02356C-0.0169914 5.83234 -0.00906202 5.65582 0.0543725 5.49402C0.117807 5.33221 0.228817 5.18865 0.387404 5.06332C0.54599 4.93858 0.736294 4.87622 0.958314 4.87622H5.21636L6.59606 0.639865C6.67535 0.433932 6.79841 0.275657 6.96525 0.165041C7.13144 0.055014 7.3097 0 7.5 0C7.6903 0 7.86856 0.055014 8.03475 0.165041C8.20159 0.275657 8.32465 0.433932 8.40394 0.639865L9.78364 4.87622H14.0417C14.2637 4.87622 14.454 4.93858 14.6126 5.06332C14.7712 5.18865 14.8822 5.33221 14.9456 5.49402C15.0091 5.65582 15.017 5.83234 14.9694 6.02356C14.9218 6.21479 14.8029 6.36924 14.6126 6.48691L11.1633 8.75954L12.5193 12.8414C12.5985 13.0474 12.5947 13.2386 12.5078 13.4151C12.4203 13.5916 12.2972 13.7314 12.1386 13.8343C11.9801 13.9373 11.7977 13.9923 11.5915 13.9994C11.3854 14.007 11.1951 13.9447 11.0206 13.8123L7.5 11.319Z" fill="#D04545" />
@@ -98,7 +110,7 @@ const Catalog = () => {
                                             </svg> o mas</CheckBoxLabel>
                                     </OptionsLine>
                                     <OptionsLine>
-                                        <RadioButon type="radio" name="valoration" id="valoration0" />
+                                        <RadioButon type="radio" name="valoration" id="valoration0"  checked={productFilter.valoration === 0} onClick={()=>orderResults({...productFilter, valoration:0},setProductFilter,productList,setProductListFiltered)}/>
                                         <CheckBoxLabel htmlFor="valoration0">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="95" height="14" viewBox="0 0 95 14" fill="none">
                                                 <path d="M4.7404 11.3434L7.49983 9.7168L10.2593 11.3648L9.53656 8.28282L11.9675 6.22817L8.77005 5.94993L7.49983 3.03917L6.22962 5.92853L3.03218 6.20676L5.46311 8.28282L4.7404 11.3434ZM7.49983 11.7286L3.86439 13.8689C3.70379 13.9688 3.53589 14.0116 3.36068 13.9973C3.18548 13.9831 3.03218 13.926 2.90078 13.8261C2.76938 13.7262 2.66718 13.6015 2.59417 13.452C2.52117 13.3019 2.50657 13.1341 2.55037 12.9486L3.51399 8.9035L0.294646 6.18536C0.148644 6.05695 0.0575391 5.91055 0.0213306 5.74618C-0.0154618 5.58238 -0.00465776 5.422 0.053743 5.26505C0.112144 5.1081 0.199745 4.97968 0.316546 4.8798C0.433348 4.77992 0.593949 4.71571 0.798352 4.68718L5.047 4.32333L6.68952 0.513664C6.76253 0.342443 6.87582 0.214026 7.02942 0.128416C7.18243 0.0428054 7.33923 0 7.49983 0C7.66044 0 7.81753 0.0428054 7.97113 0.128416C8.12414 0.214026 8.23714 0.342443 8.31014 0.513664L9.95267 4.32333L14.2013 4.68718C14.4057 4.71571 14.5663 4.77992 14.6831 4.8798C14.7999 4.97968 14.8875 5.1081 14.9459 5.26505C15.0043 5.422 15.0154 5.58238 14.9792 5.74618C14.9424 5.91055 14.851 6.05695 14.705 6.18536L11.4857 8.9035L12.4493 12.9486C12.4931 13.1341 12.4785 13.3019 12.4055 13.452C12.3325 13.6015 12.2303 13.7262 12.0989 13.8261C11.9675 13.926 11.8142 13.9831 11.639 13.9973C11.4638 14.0116 11.2959 13.9688 11.1353 13.8689L7.49983 11.7286Z" fill="#D04545" />
@@ -115,19 +127,20 @@ const Catalog = () => {
                                 <FilterName>Orden</FilterName>
                                 <FilterOptions>
                                     <OptionsLine>
-                                        <RadioButon type="radio" name="orden" id="a-z" />
+                                        <RadioButon type="radio" name="orden" id="a-z"  checked={productFilter.orderBy === "a-z"}  onClick={()=>orderResults({...productFilter, orderBy:"a-z"},setProductFilter,productList,setProductListFiltered)}/>
                                         <CheckBoxLabel htmlFor="a-z">Alfabéticamente: A - Z</CheckBoxLabel>
                                     </OptionsLine>
                                     <OptionsLine>
-                                        <RadioButon type="radio" name="orden" id="z-a" />
+                                        <RadioButon type="radio" name="orden" id="z-a"  checked={productFilter.orderBy === "z-a"}  onClick={()=>orderResults({...productFilter, orderBy:"z-a"},setProductFilter,productList,setProductListFiltered)}/>
                                         <CheckBoxLabel htmlFor="z-a">Alfabéticamente: Z - A</CheckBoxLabel>
                                     </OptionsLine>
                                     <OptionsLine>
-                                        <RadioButon type="radio" name="orden" id="mayor-menor" />
+                                        <RadioButon type="radio" name="orden" id="mayor-menor"  checked={productFilter.orderBy === "mayor-menor"}  onClick={()=>orderResults({...productFilter, orderBy:"mayor-menor"},setProductFilter,productList,setProductListFiltered)}/>
                                         <CheckBoxLabel htmlFor="mayor-menor">Precio: Mayor a menor</CheckBoxLabel>
                                     </OptionsLine>
                                     <OptionsLine>
-                                        <RadioButon type="radio" name="orden" id="menor-mayor" />
+                                        <RadioButon type="radio" name="orden" id="menor-mayor"  checked={productFilter.orderBy === "menor-mayor"}  onClick={()=>orderResults({...productFilter, orderBy:"menor-mayor"},setProductFilter,productList,setProductListFiltered)}
+        />
                                         <CheckBoxLabel htmlFor="menor-mayor">Precio: Menor a mayor</CheckBoxLabel>
                                     </OptionsLine>
                                 </FilterOptions>
@@ -135,7 +148,7 @@ const Catalog = () => {
                         </Filters>
                     </FilterContainer>
                     <ResultContainer>
-                        {productList.map(product =>
+                        {productListFiltered.map(product =>
                             <ProductCard key={product._id} productId={product._id} priceChanged="" priceChange="" img={product.img[0]} title={product.name} price={product.price[0].Price} beforePrice="" vendor={product.price[0].Vendor} />
                         )}
                     </ResultContainer>
@@ -164,9 +177,63 @@ const Catalog = () => {
         </>
     );
 };
-const loadProducts = async (setProductLists, filter) => {
+const loadProducts = async (setProductLists, filter,setProductListFiltered) => {
     const response = await fetch("http://localhost:3000/api/products/filteredProducts/" + filter);
     const data = await response.json();
     setProductLists(data);
+    setProductListFiltered(data);
 }
+
+const orderResults = (productFilter,setProductFilter,productList,setProductListFiltered) =>{
+    console.log(productFilter);
+    let filteredList = [...productList];
+    
+    filteredList=orderBy( productFilter.orderBy,productList);
+    filteredList=filterByValoration( productFilter.valoration,filteredList);
+    console.log(filteredList);
+    setProductListFiltered(filteredList);
+    setProductFilter(productFilter);
+};
+const orderBy = (param,list) =>{
+    let filteredList = [...list];
+    switch (param) {
+        
+        case 'a-z':
+            filteredList=list.sort(function(a, b){
+                if(a.name < b.name) { return -1; }
+                if(a.name > b.name) { return 1; }
+                return 0;
+            })
+            break;
+        case 'z-a':
+            filteredList=list.sort(function(a, b){
+                if(a.name > b.name) { return -1; }
+                if(a.name < b.name) { return 1; }
+                return 0;
+            })
+            break;
+        case 'mayor-menor':
+            filteredList=list.sort(function(a, b){
+                if(a.price[0].Price > b.price[0].Price) { return -1; }
+                if(a.price[0].Price < b.price[0].Price) { return 1; }
+                return 0;
+            })
+            break;
+        case 'menor-mayor':
+            filteredList=list.sort(function(a, b){
+                if(a.price[0].Price < b.price[0].Price) { return -1; }
+                if(a.price[0].Price > b.price[0].Price) { return 1; }
+                return 0;
+            })
+            break;
+    
+        default:
+            break;
+    }
+    return filteredList;
+};
+const filterByValoration = (param,list) =>{
+    const filteredList = [...list].filter(product=>product.valoration.split(" / ")[0]>=param);
+    return filteredList;
+};
 export default Catalog;

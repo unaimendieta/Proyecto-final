@@ -30,7 +30,6 @@ const LikePopUp = () => {
     useEffect(() => {
         loadProducts(user.liked, setProductList);
     }, []);
-    console.log(productList)
     return (
         <>
             <MainContainer>

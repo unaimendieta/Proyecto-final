@@ -1,7 +1,7 @@
 import { LogoutButton, Container, Content, Header, MainContainer, Menu, Option, Overview, OverviewButton, OverviewDetails, OverviewInfoContainer, OverviewTitle, OverviewTitleAddon, OverviewTitleContainer, Payment, PaymentType, Title, PaymentHistoryContainer, SectionTitle, RowContent, Row } from "./styles";
 import { getAuth, signOut } from "firebase/auth";
 import firebaseApp from "../../firebase/credentials";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 
@@ -10,20 +10,15 @@ const auth = getAuth(firebaseApp);
 const UserPage = () => {
 	const {user,userLoading} = useContext(AuthContext);
 
-    if (user===null && userLoading) {
-        return (<h1>cargando...</h1>);
-    }
-    else if (user===null && userLoading===false) {
+    if (user===null && userLoading===false) {
         return (<Navigate to="/login"/>);
     }
     return (
         <>
-        {user &&
-
-        
+        {user ?
             <MainContainer>
                 <Header>
-                    <Title>Binvenido a tu panel de usuario {user.name}.</Title>
+                    <Title>Bienvenido a tu panel de usuario {user.name}.</Title>
                     <LogoutButton onClick={() => signOut(auth)}>CERRAR SESIÓN</LogoutButton>
                 </Header>
                 <Container>
@@ -75,7 +70,8 @@ const UserPage = () => {
                     </Content>
                 </Container>
             </MainContainer>
-
+            :
+            <h1>cargando...</h1>
             }
         </>
     );

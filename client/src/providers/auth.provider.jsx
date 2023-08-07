@@ -7,27 +7,23 @@ const auth = getAuth(firebaseApp);
 
 const AuthProvider = ({children})=>{
     const [user, setUser] = useState(null);
-    const [userLoading, setUserLoading] = useState(false);
+    const [userLoading, setUserLoading] = useState(true);
 
-    useEffect(() => {
-        const unsuscribe = onAuthStateChanged(auth, (firebaseUser) => {
+    useEffect(() =>  {
+        const unsubscribe =  onAuthStateChanged (auth, (firebaseUser) => {
             if (firebaseUser) {
-              
                 setUserLoading(true);
                 setUserWithFirebase(firebaseUser, setUser);
-              
             } else {
               setUser(null);
               setUserLoading(false);
             }
           });
 
-          return ()=>unsuscribe();
+          return ()=>unsubscribe();
     }, [])
     
 
-    
-    console.log(userLoading);
 
     return(
         <>

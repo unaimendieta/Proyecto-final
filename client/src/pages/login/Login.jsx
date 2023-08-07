@@ -3,7 +3,6 @@ import { BackButton, Button, Caption, Form, FormContainer, FormTitle, Header, In
 
 import firebaseApp from "../../firebase/credentials";
 import {getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,} from "firebase/auth";
-  import { getFirestore, doc,  setDoc } from "firebase/firestore";
 import {  useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
   const auth = getAuth(firebaseApp);
@@ -12,14 +11,13 @@ import { AuthContext } from "../../context/AuthContext";
 
 const Login = () => {
     const navigate = useNavigate();
-	const firestore = getFirestore(firebaseApp);
 	const {user} = useContext(AuthContext);
 	const [isRegistering,setIsRegistering] = useState(false);
     useEffect(() => {
         if (!user) {
          navigate("/login");
         }
-}, [user])
+	}, [user])
 	return (
 		<>
             <MainContainer>
@@ -31,7 +29,7 @@ const Login = () => {
 				</Mask>   
 				<FormContainer>
 					{!isRegistering ?
-						<Form onSubmit={e=>submitHandle(e,isRegistering,setIsRegistering,firestore,navigate)}>
+						<Form onSubmit={e=>submitHandle(e,isRegistering,setIsRegistering,navigate)}>
 							<FormTitle>Bienvenido de nuevo 👋</FormTitle>
 							<Input type="email" placeholder="Email" name="email" required/>
 							<Input type="password" placeholder="Password"  name="password" required/>
@@ -50,7 +48,7 @@ const Login = () => {
 							</RegisterOption>
 						</Form>	
 						:
-						<Form onSubmit={e=>submitHandle(e,isRegistering,setIsRegistering,firestore,navigate)}>
+						<Form onSubmit={e=>submitHandle(e,isRegistering,setIsRegistering,navigate)}>
 							<FormTitle>Bienvenido de nuevo 👋</FormTitle>
 							<Input type="text" placeholder="Nombre" name="name" required/>
 							<Input type="text" placeholder="Apellido" name="surname" required/>
@@ -89,7 +87,7 @@ const Login = () => {
 	);
 };
 
-const submitHandle = async(params,isRegistering,setIsRegistering,firestore,navigate)=>{
+const submitHandle = async(params,isRegistering,setIsRegistering,navigate)=>{
 	params.preventDefault();
 	const email = params.target.elements.email.value;
 	const password = params.target.elements.password.value;
@@ -98,7 +96,7 @@ const submitHandle = async(params,isRegistering,setIsRegistering,firestore,navig
 		const surname = params.target.elements.surname.value;
 		// registrar
 		try {
-			registerNewUser(email, password, name,surname,firestore);
+			registerNewUser(email, password, name,surname);
 			setIsRegistering(false)
 		  } catch (error) {
 			console.log(error.message);
@@ -110,7 +108,7 @@ const submitHandle = async(params,isRegistering,setIsRegistering,firestore,navig
 		
 	  }
 }
-const registerNewUser = async(email, password, name,surname,firestore)=>{
+const registerNewUser = async(email, password, name,surname)=>{
 	
 	const userInfo = await createUserWithEmailAndPassword(
 		auth,
@@ -119,8 +117,19 @@ const registerNewUser = async(email, password, name,surname,firestore)=>{
 	  ).then((userInfo) => {
 		return userInfo;
 	  });
-	  const docuRef = doc(firestore, `users/${userInfo.user.uid}`);
-	  setDoc(docuRef, { name, surname, liked:[], plan:{type:"gratis",price:0,frequency:null,likeMax:3,historic:false}});
+	  fetch("http://localhost:3000/api/users/create", {
+		method: 'POST',
+		body: JSON.stringify({
+			"id": userInfo.user.uid,
+			name,
+			surname,
+			"plan": {name:"BÁSICO",price:0,frequency:null,likeMax:3,historic:false}
+		}),
+		headers: {
+			Accept: "*/*",
+			"Content-Type": "application/json"
+		}
+	});
 }
 
 

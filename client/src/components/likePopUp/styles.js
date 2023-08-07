@@ -1,24 +1,21 @@
 import styled from "styled-components";
 
 const MainContainer = styled.div`
+    width: 100%;
+    height: 100vh;
     position: fixed;
-    bottom: 32px;
-    right: 32px;
-    height: 580px;
-    max-height: 580px;
-    width: 400px;
-    display: grid;
-    grid-template-rows: 1fr 64px;
-    gap: 16px;
-    grid-template-areas: 
-    "container"
-    "button";
+    top: 0;
+    left: 0;
+    /* background-color: black; */
+    pointer-events: none;
 `;
 
 const OpenButton = styled.div`
-    grid-area: "button";
+    pointer-events: all;
     justify-self: end;
-    position: relative;
+    position: absolute;
+    bottom: 32px;
+    right: 32px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -54,7 +51,12 @@ const Number = styled.p`
 `;
 
 const Container = styled.div`
-    grid-area: "container";
+    pointer-events: all;
+    position: absolute;
+    bottom: 124px;
+    right: 32px;
+    width: 400px;
+    height: 580px;
     background-color: #ffffff;
     border-radius: 8px;
     transform: translate(1000px);
